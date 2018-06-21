@@ -1,0 +1,73 @@
+Factory Method
+
+Factory method is a creational design pattern, i.e., related to object creation. In Factory pattern, we create object without exposing the creation logic to client and the client use the same common interface to create new type of object.
+
+A factory pattern is one of the core design principles to create an object, allowing clients to create objects of a library(explained below) in a way such that it doesn’t have tight coupling with the class hierarchy of the library.
+
+A library is something which is provided by some third party which exposes some public APIs and clients make calls to those public APIs to complete its task. A very simple example can be different kinds of Views provided by Android OS.
+
+Basically a Factory consists of an interface class which is common to all of the implementation classes that the factory will create. Then you have the factory class which is usually a singleton class that spawns instances of these implementation classes.
+
+In Factory Method, client knows about abstract base class but not concrete subclass. Client wants to create an object from abstract class. But the subclass decides which class to instantiate. This allows us to defer the creation to the subclass. Again, the client doesn't know which subclass or concrete class is used to create the object. The creation is deferred to run-time.
+
+Client knows about abstract base class but not concrete subclass.
+Run-time creation of objects.
+Subclasses create objects.
+
+What's the difference between Abstract Factory Pattern and Factory Method?
+
+Abstract Factory design pattern creates Factory
+Factory design pattern creates Products
+
+#include <iostream>
+
+class Button {
+public:
+	virtual void paint() = 0;
+};
+ 
+class OSXButton: public Button {
+public:
+	void paint() {
+		std::cout << "OSX button \n";
+	}
+};
+ 
+class WindowsButton: public Button  {
+public:
+	void paint() {
+		std::cout << "Windows button \n";
+	}
+};
+ 
+class GUIFactory {
+public:
+	virtual Button *createButton(char *) = 0;
+};
+
+class Factory: public GUIFactory {
+public:
+	Button *createButton(char *type) {
+		if(strcmp(type,"Windows") == 0) {
+			return new WindowsButton;
+		}
+		else if(strcmp(type,"OSX") == 0) {
+			return new OSXButton;
+		}
+	}
+};
+
+int main()
+{
+	GUIFactory* guiFactory;
+	Button *btn;
+
+	guiFactory = new Factory;
+
+	btn = guiFactory->createButton("OSX");
+	btn -> paint();
+	btn = guiFactory->createButton("Windows");
+	btn -> paint();
+
+	return 0;
+}
